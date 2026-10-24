@@ -2,6 +2,7 @@ AddCSLuaFile()
 
 if not EMVU then EMVU = {} end
 EMVU.Liveries = {}
+EMVU.LiverySlots = {}
 EMVU.SubMaterials = {}
 EMVU.Index = {}
 EMVU.AutoInsert = {}

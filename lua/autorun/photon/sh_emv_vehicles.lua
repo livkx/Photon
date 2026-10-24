@@ -314,6 +314,9 @@ function EMVU:OverwriteIndex(name, data)
 		EMVU.Liveries[name] = data.Liveries
 	end
 
+	-- Assigned even when absent, so a refreshed vehicle file that drops it stops using it.
+	EMVU.LiverySlots[name] = Photon.LiverySlots.NormalizeOverride(name, data.LiverySubMaterial)
+
 	if istable(data.SubMaterials) then
 		EMVU.SubMaterials[name] = data.SubMaterials
 	end
