@@ -109,3 +109,9 @@ Opt in with either:
 
 or a Components key whose name contains `"headlight"` (same as stock auto components such as
 `auto_fpiu16_headlights`).
+
+## Liveries
+
+Ported Glide packs often rename their paint material (for example `…/skin_l2`), which Photon's own
+`/skin`, `/skin0` and `/carpaint` names miss. Register a rule or set `EMV.LiverySubMaterial`; see
+[Livery Slots](livery-slots.md).

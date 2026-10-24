@@ -412,19 +412,7 @@ function EMVU:MakeEMV( ent, emv )
 
 	function ent:ApplySmartSkin( mat, index, skin )
 		if not IsValid( self ) then return end
-		local submaterialIndex = false
-		if skin then
-			submaterialIndex = skin
-		else
-			local materials = self:GetMaterials()
-			for i=1,#materials do
-				local thisMat = tostring( materials[i] )
-				if string.EndsWith( thisMat, "/skin" ) or string.EndsWith( thisMat, "/skin0" ) or string.EndsWith( thisMat, "/carpaint" ) then
-					submaterialIndex = i - 1
-					break
-				end
-			end
-		end
+		local submaterialIndex = skin or Photon.GetLiverySubMaterial( self, self.Name )
 		if submaterialIndex == false then return end
 		if index then self:SetSkin(index) else self:SetSkin(0) end
 
@@ -432,15 +420,7 @@ function EMVU:MakeEMV( ent, emv )
 		self:SetSubMaterial(submaterialIndex, mat)
 
 		for _, prop in ipairs(EMVU.Helper.GetSubProps(self)) do
-			local propsubmaterialIndex = false
-			local propmaterials = prop:GetMaterials()
-			for i=1,#propmaterials do
-				local propthisMat = tostring( propmaterials[i] )
-				if string.EndsWith( propthisMat, "/skin" ) or string.EndsWith( propthisMat, "/skin0" ) or string.EndsWith( propthisMat, "/carpaint" ) then
-					propsubmaterialIndex = i - 1
-					break
-				end
-			end
+			local propsubmaterialIndex = Photon.GetLiverySubMaterial( prop )
 			if propsubmaterialIndex ~= false then prop:SetSubMaterial(propsubmaterialIndex, mat) end
 		end
 	end

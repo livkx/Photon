@@ -36,21 +36,16 @@ function ent:Photon_AdjustedSpeed()
 	return ( self:GetVelocity():Length() * ( 3600 / 63360 ) )
 end
 
+--- The vehicle's paint submaterial, as `Photon.GetLiverySubMaterial` resolves it.
+--- @return integer|false index 0-based, or false when no livery slot rule recognises any of its materials.
 function ent:Photon_GetAutoSkinIndex()
-	local materials = self:GetMaterials()
-	for i=1,#materials do
-		local thisMat = tostring( materials[i] )
-		if string.EndsWith( thisMat, "/skin" ) or string.EndsWith( thisMat, "/skin0" ) or string.EndsWith( thisMat, "/carpaint" ) then
-			return i - 1
-		end
-	end
-	return false
+	return Photon.GetLiverySubMaterial( self, self:EMVName() )
 end
 
 function ent:Photon_GetAutoSkinData()
 	if self:GetSkin() == 0 then
 		local skinIndex = self:Photon_GetAutoSkinIndex()
-		-- No /skin|/skin0|/carpaint material (common on Glide packs with no livery options).
+		-- No paint slot any livery slot rule recognises (common on Glide packs with no livery options).
 		if not isnumber(skinIndex) then
 			return 0
 		end

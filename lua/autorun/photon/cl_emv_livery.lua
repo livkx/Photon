@@ -154,8 +154,12 @@ Photon.AutoLivery.ApplyTexture = function(mat, ent, car, val, id)
 		LiveryID = veh:Photon_GetLiveryID()
 	}
 
+	-- A sub-prop has its own material list, so its paint slot is looked up on it, as the server does.
 	for _, prop in ipairs(EMVU.Helper.GetSubProps(veh)) do
-		prop:SetSubMaterial(applyIndex, "!" .. tostring(newLivery:GetName()))
+		local propIndex = Photon.GetLiverySubMaterial(prop)
+		if propIndex ~= false then
+			prop:SetSubMaterial(propIndex, "!" .. tostring(newLivery:GetName()))
+		end
 	end
 end
 
