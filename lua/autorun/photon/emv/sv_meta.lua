@@ -263,6 +263,8 @@ function ENT:ELS_IllumOn()
 	for _, lampData in ipairs(lamps) do
 		local pos, ang, metaName = unpack(lampData)
 		local lampMeta = helper:GetLampMeta(name, metaName)
+		-- A vehicle file can name illumination lights with no EMV.Lamps entry behind them.
+		if not istable(lampMeta) then continue end
 
 		local lamp = ents.Create("env_projectedtexture")
 		if not IsValid(lamp) then

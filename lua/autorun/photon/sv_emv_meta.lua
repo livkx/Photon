@@ -6,6 +6,14 @@ local function sequenceCount(name)
 	return istable(data) and istable(data.Sequences) and #data.Sequences or 0
 end
 
+--- Number of traffic advisor sequences a vehicle has, or 0 when it has none registered.
+--- @param name any
+--- @return integer
+local function trafficCount(name)
+	local data = istable(EMVU.Sequences) and EMVU.Sequences[name]
+	return istable(data) and istable(data.Traffic) and #data.Traffic or 0
+end
+
 function EMVU:MakeEMV( ent, emv )
 
 	-- Avoid any uncaught errors if a bad entity is passed in
@@ -62,7 +70,8 @@ function EMVU:MakeEMV( ent, emv )
 
 	function ent:ELS_TrafficToggle()
 		if not IsValid( self ) then return end
-		local maxSequences = #EMVU.Sequences[self.Name].Traffic
+		local maxSequences = trafficCount(self.Name)
+		if maxSequences == 0 then return end
 		if self:ELS_TrafficOption() >= maxSequences then
 			self:ELS_TrafficOption( 1 )
 		else
@@ -73,9 +82,12 @@ function EMVU:MakeEMV( ent, emv )
 	function ent:ELS_TrafficToggleBack()
 		if not IsValid( self ) then return end
 
+		local maxSequences = trafficCount(self.Name)
+		if maxSequences == 0 then return end
+
 		local cur = self:ELS_TrafficOption()
 		if cur == 1 then
-			self:ELS_TrafficOption(#EMVU.Sequences[self.Name].Traffic)
+			self:ELS_TrafficOption(maxSequences)
 		else
 			self:ELS_TrafficOption(cur - 1)
 		end
@@ -451,7 +463,7 @@ function EMVU:MakeEMV( ent, emv )
 		if not IsValid( self ) then return end
 		-- print( "instructed to apply: " .. index .. " from " .. category .. " with unit #" .. tostring( unit ) )
 		local available = EMVU.Liveries[ self.Name ]
-		if not available[category] or not available[category][index] then return end
+		if not istable( available ) or not istable( available[category] ) or not available[category][index] then return end
 		local liveryData = available[category][index]
 		if istable( liveryData ) then
 			if liveryData[1] and liveryData[2] then
