@@ -1,3 +1,11 @@
+--- Number of light sequences a vehicle has, or 0 when it has none registered.
+--- @param name any
+--- @return integer
+local function sequenceCount(name)
+	local data = istable(EMVU.Sequences) and EMVU.Sequences[name]
+	return istable(data) and istable(data.Sequences) and #data.Sequences or 0
+end
+
 function EMVU:MakeEMV( ent, emv )
 
 	-- Avoid any uncaught errors if a bad entity is passed in
@@ -93,7 +101,8 @@ function EMVU:MakeEMV( ent, emv )
 
 	function ent:ELS_LightsToggle()
 		if not IsValid( self ) then return end
-		local maxSequences = #EMVU.Sequences[self.Name].Sequences
+		local maxSequences = sequenceCount(self.Name)
+		if maxSequences == 0 then return end
 		if self:ELS_LightOption() >= maxSequences then
 			self:ELS_LightOption(1)
 		else
@@ -104,9 +113,12 @@ function EMVU:MakeEMV( ent, emv )
 	function ent:ELS_LightsToggleBack()
 		if not IsValid( self ) then return end
 
+		local maxSequences = sequenceCount(self.Name)
+		if maxSequences == 0 then return end
+
 		local cur = self:ELS_LightOption()
 		if cur == 1 then
-			self:ELS_LightOption(#EMVU.Sequences[self.Name].Sequences)
+			self:ELS_LightOption(maxSequences)
 		else
 			self:ELS_LightOption(cur - 1)
 		end
@@ -169,7 +181,7 @@ function EMVU:MakeEMV( ent, emv )
 		if not IsValid( self ) then return end
 		if self:ELS_NoSiren() then return end
 		if self:ELS_Siren() then self:ELS_SirenOff() end
-		if not self:ELS_Lights() then self:ELS_LightOption( #EMVU.Sequences[self.Name].Sequences ) end
+		if not self:ELS_Lights() and sequenceCount(self.Name) > 0 then self:ELS_LightOption( sequenceCount(self.Name) ) end
 		self:ELS_LightsOn()
 
 		local recipientFilter = RecipientFilter()
