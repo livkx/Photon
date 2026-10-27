@@ -324,15 +324,16 @@ function ENT:Photon_SetUnitNumber(val)
 end
 
 function ENT:Photon_SetSelection(index, value)
-	if not istable(EMVU.Selections[self.Name][index]) then
+	local selections = istable(EMVU.Selections) and EMVU.Selections[self.Name]
+	local selection = istable(selections) and selections[index]
+	local selectionData = istable(selection) and istable(selection.Options) and selection.Options[value]
+	if not istable(selectionData) then
 		return
 	end
 
 	local selectionTable = self:Photon_SelectionTable()
 	selectionTable[index] = value
 	self:SetPhotonNet_SelectionString(table.concat(selectionTable, "."))
-
-	local selectionData = EMVU.Selections[self.Name][index].Options[value]
 
 	if istable(selectionData.Bodygroups) then
 		for _, bgData in ipairs(selectionData.Bodygroups) do
