@@ -711,7 +711,8 @@ function EMVU.Helper:GetIlluminationLights( name, option )
 end
 
 function EMVU.Helper:GetLampMeta( name, index )
-	return EMVU.Lamps[name][index]
+	local lamps = EMVU.Lamps[name]
+	return istable(lamps) and lamps[index] or nil
 end
 
 function EMVU.Helper:HasLamps( name )

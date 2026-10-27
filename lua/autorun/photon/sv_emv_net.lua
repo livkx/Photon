@@ -290,6 +290,7 @@ net.Receive( "photon_availableskins", function( len, ply ) Photon.Net.SendAvaila
 function Photon.Net.ReceiveSkinChangeRequest( len, ply )
 	local ent = net.ReadEntity()
 	local skinName = net.ReadString()
+	if not IsValid( ent ) or not isfunction( ent.Photon_SetAutoSkin ) then return end
 	local modifyBlocked = hook.Call( "Photon.CanPlayerModify", GM, ply, ent )
 	if modifyBlocked != false then
 		ent:Photon_SetAutoSkin( skinName )
@@ -300,6 +301,7 @@ net.Receive( "photon_setautoskin", function( len, ply ) Photon.Net.ReceiveSkinCh
 function Photon.Net.SetLicenseMaterial( len, ply )
 	local ent = net.ReadEntity()
 	local mat = net.ReadString()
+	if not IsValid( ent ) or not isfunction( ent.Photon_SetLicenseMaterial ) then return end
 	local modifyBlocked = hook.Call( "Photon.CanPlayerModify", GM, ply, ent, "LICENSE_PLATE" )
 	if modifyBlocked != false then
 		ent:Photon_SetLicenseMaterial( mat )
@@ -310,6 +312,7 @@ net.Receive( "photon_license_mat", function( len, ply ) Photon.Net.SetLicenseMat
 function Photon.Net.SetWheel( len, ply )
 	local ent = net.ReadEntity()
 	local index = net.ReadInt( 8 )
+	if not IsValid( ent ) or not isfunction( ent.Photon_SetWheelIndex ) then return end
 	local modifyBlocked = hook.Call( "Photon.CanPlayerModify", GM, ply, ent, "WHEEL" )
 	if modifyBlocked != false then
 		ent:Photon_SetWheelIndex( index )
